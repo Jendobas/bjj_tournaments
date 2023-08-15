@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}to find{% endblock %}
+
+{% block content %}
+<form action="/tutor/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <br>
+    <button type="submit">Отправить</button>
+</form>
+    <ul>
+            {% for k, v in context.items %}
+            <li>{{ k }} <a href="{{ v }}">go</a></li>
+            {% endfor %}
+    </ul>
+{% endblock %}

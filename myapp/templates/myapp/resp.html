@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}to find{% endblock %}
+
+{% block content %}
+    <ul>
+            {% for k, v in context.items %}
+            <li>{{ k }} <a href="{{ v }}">go</a></li>
+            {% endfor %}
+    </ul>
+{% endblock %}
