@@ -47,7 +47,6 @@ def tutor_page(request):
 
             if 'shakasports' in url:
                 name = soup_tutor.find_all('div', class_='col-sm-6 col-lg-3')
-                print('dfdfsdfsvdsfvdsfvdsfvfdsvdsfvsdfvsdfv')
             elif 'ajptour' in url:
                 name = soup_tutor.find_all('p', class_='muted margin-bottom-xs-8')
             elif 'acbjj' in url:
@@ -62,7 +61,11 @@ def tutor_page(request):
             for i in name:
                 if city in i.text:
                     context[i.text] = url
-        return render(request, 'myapp/resp.html', {'context': context})
+
+        if len(context):
+            return render(request, 'myapp/resp.html', {'context': context})
+        else:
+            return render(request, 'myapp/zero_tutor.html', {'context': city})
 
     form = TutorForm()
     return render(request, 'myapp/tutor.html', {'form': form})

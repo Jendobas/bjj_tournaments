@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}All tournaments{% endblock %}
+
+{% block content %}
+<h1>В городе {{ context }} турниры не найдены</h1>
+<br>
+<p>Попробовать <a href="/tutor/">найти турнир</a> еще раз</p>
+
+{% endblock %}
