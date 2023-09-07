@@ -10,19 +10,22 @@ from myapp.models import Quotes
 from .forms import TutorForm
 import time
 
+headers = {
+    "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.59"}
+
 
 def index_page(request):
     url = 'https://vk.com/everydaydanaher'
-    resp = requests.get(url)
+    resp = requests.get(url, headers=headers)
     soup = BeautifulSoup(resp.text, 'lxml')  # получаем обработанный html код страницы
-    data = soup.find_all('div', class_='pi_text')
+    data = soup.find_all('div', class_='wall_post_text')
 
     for i in data:
-        name = i.text.replace('Показать ещё', '')
-        if Quotes.objects.filter(Quotes.quote == name):
-            continue
-        else:
-            Quotes.objects.create(quote=name)
+        name = i.text
+        Quotes.objects.create(quote=name)
+    for quote in Quotes.objects.values_list('quote', flat=True).distinct():  # удаляем дубликаты из бд
+        Quotes.objects.filter(pk__in=Quotes.objects.filter(quote=quote).values_list('id', flat=True)[1:]).delete()
 
     quotes = Quotes.objects.all()
     quote_random = random.choice(quotes)
@@ -36,10 +39,6 @@ def tutor_page(request):
         context = {}
         urls = ['https://shakasports.com/bjj', 'https://ajptour.com/en/federation/1/events',
                 'https://acbjj.smoothcomp.com/en/federation/2/events/upcoming']
-        headers = {
-            "User-Agent":
-                "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) "
-                "Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729)"}
 
         for url in urls:
             resp_tutor = requests.get(url, headers=headers)
