@@ -14,6 +14,24 @@ headers = {
     "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.59"}
 
+cities = {
+    'Волгоград': ['Волгоград', 'Volgograd'],
+    'Воронеж': ['Воронеж', 'Voronej', 'Voronezh'],
+    'Казань': ['Казань', 'Kazan'],
+    'Кемерово': ['Кемерово', 'Kemerovo'],
+    'Краснодар': ['Краснодар', 'Krasnodar'],
+    'Красногорск': ['Москва', 'Красногорск', 'Moscow'],
+    'Москва': ['Москва', 'Красногорск', 'Moscow'],
+    'Новосибирск': ['Новосибирск', 'Novosibirsk'],
+    'Ростов-на-Дону': ['Ростов-на-Дону', 'Rostov-na-Donu', 'Rostov-na-Dony'],
+    'Санкт-Петербург': ['Санкт-Петербург', 'Санкт Петербург', 'Saint Petersburg'],
+    'Самара': ['Самара', 'Samara'],
+    'Тверь': ['Тверь', 'Tver'],
+    'Уфа': ['Уфа', 'Ufa'],
+    'Хабаровск': ['Хабаровск', 'Habarovsk'],
+    'Ярославль': ['Ярославль', 'Yaroslavl']
+}
+
 
 def index_page(request):
     url = 'https://vk.com/everydaydanaher'
@@ -35,7 +53,8 @@ def index_page(request):
 
 def tutor_page(request):
     if request.method == 'POST':
-        city = request.POST['city_form']
+        resp = request.POST['city_form']
+        city = cities[resp]
         context = {}
         urls = ['https://shakasports.com/bjj', 'https://ajptour.com/en/federation/1/events',
                 'https://acbjj.smoothcomp.com/en/federation/2/events/upcoming']
@@ -57,14 +76,15 @@ def tutor_page(request):
                 time.sleep(1)
                 name = driver.find_elements(By.CSS_SELECTOR, '.panel-body')
 
-            for i in name:
-                if city in i.text:
-                    context[i.text] = url
+            for c in city:
+                for i in name:
+                    if c in i.text:
+                        context[i.text] = url
 
         if len(context):
             return render(request, 'myapp/resp.html', {'context': context})
         else:
-            return render(request, 'myapp/zero_tutor.html', {'context': city})
+            return render(request, 'myapp/zero_tutor.html', {'context': resp})
 
     form = TutorForm()
     return render(request, 'myapp/tutor.html', {'form': form})
